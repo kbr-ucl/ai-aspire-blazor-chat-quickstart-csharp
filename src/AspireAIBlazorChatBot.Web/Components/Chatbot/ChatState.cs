@@ -29,10 +29,10 @@ public class ChatState
             _logger.LogInformation("Sending message to chat client.");
             _logger.LogInformation($"user Text: {userText}");
 
-            var result = await _chatClient.CompleteAsync(ChatMessages);
-            ChatMessages.Add(new ChatMessage(ChatRole.Assistant, result.Message.Text));
+            var result = await _chatClient.GetResponseAsync(ChatMessages);
+            ChatMessages.Add(new ChatMessage(ChatRole.Assistant, result.Text));
             
-            _logger.LogInformation($"Assistant Response: {result.Message.Text}");
+            _logger.LogInformation($"Assistant Response: {result.Text}");
         }
         catch (Exception e)
         {
