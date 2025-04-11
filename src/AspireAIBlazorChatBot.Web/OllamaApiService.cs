@@ -3,20 +3,22 @@ using System.Text.Json;
 
 public class OllamaApiService
 {
-    private readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _httpClientFactory;
 
-    public OllamaApiService()
+    public OllamaApiService(IHttpClientFactory httpClientFactory)
     {
-        _httpClient = new HttpClient();
+        _httpClientFactory = httpClientFactory;
+        //_httpClient = new HttpClient();
     }
 
-    public async Task<string> PullModelAsync(string ollamaUrl, string modelName)
+    public async Task<string> PullModelAsync(Uri ollamaUrl, string modelName)
     {
-        var requestUri = $"{ollamaUrl}/api/pull";
+        var httpClient = _httpClientFactory.CreateClient("ollama-api");
+        var requestUri = "api/pull";
         var jsonContent = $"{{ \"name\": \"{modelName}\" }}";
         var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-        var response = await _httpClient.PostAsync(requestUri, content);
+        var response = await httpClient.PostAsync(requestUri, content);
         response.EnsureSuccessStatusCode();
 
         var responseString = await response.Content.ReadAsStringAsync();

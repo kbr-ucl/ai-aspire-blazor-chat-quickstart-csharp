@@ -2,7 +2,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 var cache = builder.AddRedis("cache");
 
-var ollama = builder.AddOllama(name: "ollama", port: null)
+var ollama = builder.AddOllama(name: "ollama", port: 60000)
     .WithOpenWebUI()
     .WithDataVolume()
     .PublishAsContainer()

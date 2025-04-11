@@ -3,6 +3,7 @@
 @using AspireApp.WebApp.Chatbot
 
 @inject IConfiguration Configuration
+@inject OllamaApiService ollamaApiService
 
 <PageTitle>Home</PageTitle>
 
@@ -35,24 +36,40 @@ Let's test local models with Ollama!
 
 @code {
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     string ollamaSLMName = "";
     string ollamaModelUrl = "";
     string ollamaModelUrlModelList = "";
-    string ollamaUrl = "";
+
+    Uri ollamaUrl;
     string modelStatus = "";
 
     protected override void OnInitialized()
     {
-        ollamaSLMName = Configuration["Aspire:OllamaSharp:ollama:Models:0"]!;
+
+        ollamaSLMName = "phi3.5";//Configuration["Aspire:OllamaSharp:ollama:Models:0"]!;
         ollamaModelUrl = $@"https://ollama.com/library/{ollamaSLMName}";
-        ollamaUrl = Configuration.GetConnectionString("ollama")!;
+
+        ollamaUrl = new Uri("http://ollama:60000");//Configuration.GetConnectionString("ollama")!;
         ollamaModelUrlModelList = $@"{ollamaUrl}/api/tags";
     }
 
     async void PullModel()
     {
-        var os = new OllamaApiService();
-        modelStatus = await os.PullModelAsync(ollamaUrl, ollamaSLMName);
+        modelStatus = await ollamaApiService.PullModelAsync(ollamaUrl, ollamaSLMName);
 
         // refresh the page
         StateHasChanged();
